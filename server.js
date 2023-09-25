@@ -5,7 +5,8 @@ const rotas = {
   '/': 'Home',
   '/livros': 'Livros',
   '/autores': 'Autores',
-  '/editora': 'Editora'
+  '/editora': 'Editora',
+  '/sobre': 'Sobre'
 }
 
 const server = http.createServer((req, res) => {
