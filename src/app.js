@@ -23,6 +23,18 @@ app.post('/livros', (req, res) => {
   res.status(201).send('Livro cadastrado com sucesso');
 });
 
+app.put('/livros/:id', (req, res) => {
+  let index = buscaLivro(req.params.id);
+
+  livros[index].titulo = req.body.titulo;
+
+  res.json(livros);
+});
+
+function buscaLivro(id) {
+  return livros.findIndex(livro => livro.id == id);
+}
+
 app.get("/autores", (req, res) => {
   res.status(200).send("Autores");
 });
