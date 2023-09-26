@@ -14,29 +14,33 @@ app.get("/livros", (req, res) => {
 });
 
 app.get("/livros/:id", (req, res) => {
-  const livro = buscaLivro(req.params.id);
-  if (livro) {
-    res.json(livros);
+  const result = buscaLivro(req.params.id);
+  if (result.livro) {
+    res.json(result.livro);
   } else {
-    res.status(404).send("Livro não encontrado");
+    livroNaoEncontrado(res);
   }
 });
 
 app.post("/livros", (req, res) => {
   const novoLivro = req.body;
-  livros.push(novoLivro);
-  res.status(201).send("Livro cadastrado com sucesso");
+  if (validaLivro(novoLivro)) {
+    livros.push(novoLivro);
+    res.status(201).send("Livro cadastrado com sucesso");
+  } else {
+    res.status(400).send("Dados de livro inválidos");
+  }
 });
 
 app.put("/livros/:id", (req, res) => {
-  const index = buscaLivroIndex(req.params.id);
+  const result = buscaLivro(req.params.id);
 
-  if(index !== -1){
-    livros[index].titulo = req.body.titulo;
+  if (result.livro) {
+    result.livro.titulo = req.body.titulo;
     res.json(livros);
   } else {
-    res.status(404).send("Livro não encontrado");
-  }  
+    livroNaoEncontrado(res);
+  }
 });
 
 app.get("/autores", (req, res) => {
@@ -53,16 +57,25 @@ app.get("/sobre", (req, res) => {
 
 // Funções de Apoio
 const livros = [
-  {id: 1, "titulo": "Garota Exemplar"},
-  {id: 2, "titulo": "Barba ensopada de sangue"}
+  { id: 1, titulo: "Garota Exemplar" },
+  { id: 2, titulo: "Barba ensopada de sangue" },
 ];
 
 function buscaLivro(id) {
-  return livros.find(livro => livro.id == id);
+  const index = livros.findIndex((livro) => livro.id == id);
+  if (index !== -1) {
+    return { livro: livros[index], index: index };
+  } else {
+    return { livro: null, index: -1 };
+  }
 }
 
-function buscaLivroIndex(id) {
-  return livros.findIndex(livro => livro.id == id);
+function validaLivro(livro) {
+  return livro && livro.titulo;
+}
+
+function livroNaoEncontrado(res) {
+  res.status(404).send("Livro não encontrado");
 }
 
 export default app;
