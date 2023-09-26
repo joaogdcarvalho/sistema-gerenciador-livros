@@ -43,6 +43,18 @@ app.put("/livros/:id", (req, res) => {
   }
 });
 
+app.delete("/livros/:id", (req, res) => {
+  const { id } = req.params;
+  const result = buscaLivro(id);
+
+  if (result.livro) {
+    livros.splice(result.index, 1); // Remove o livro da lista
+    res.send(`Livro ${id} removido com sucesso`); // Responde com status 204 (No Content) para indicar que o livro foi excluído com sucesso
+  } else {
+    res.status(404).send(`Livro com ID ${id} não encontrado`);
+  }
+});
+
 app.get("/autores", (req, res) => {
   res.status(200).send("Autores");
 });
