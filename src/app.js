@@ -25,16 +25,6 @@ app.get("/livros/:id", (req, res) => {
   }
 });
 
-app.post("/livros", (req, res) => {
-  const novoLivro = req.body;
-  if (validaLivro(novoLivro)) {
-    livros.push(novoLivro);
-    res.status(201).send("Livro cadastrado com sucesso");
-  } else {
-    res.status(400).send("Dados de livro inválidos");
-  }
-});
-
 app.put("/livros/:id", (req, res) => {
   const result = buscaLivro(req.params.id);
 
