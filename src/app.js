@@ -1,5 +1,6 @@
 import express from "express";
 import db from "./config/dbConnect.js";
+import livros from "./models/Livro.js";
 
 db.on("error", console.log.bind(console, 'Erro de conexão'))
 db.once("open", () => {
@@ -17,7 +18,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/livros", (req, res) => {
-  res.status(200).json(livros);
+  livros.find((err, livros) =>{
+    res.status(200).json(livros);
+  })
+  
 });
 
 app.get("/livros/:id", (req, res) => {
@@ -73,12 +77,6 @@ app.get("/editora", (req, res) => {
 app.get("/sobre", (req, res) => {
   res.status(200).send("Sobre");
 });
-
-// Funções de Apoio
-const livros = [
-  { id: 1, titulo: "Garota Exemplar" },
-  { id: 2, titulo: "Barba ensopada de sangue" },
-];
 
 function buscaLivro(id) {
   const index = livros.findIndex((livro) => livro.id == id);
