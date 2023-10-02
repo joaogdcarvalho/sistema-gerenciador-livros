@@ -25,17 +25,6 @@ app.get("/livros/:id", (req, res) => {
   }
 });
 
-app.put("/livros/:id", (req, res) => {
-  const result = buscaLivro(req.params.id);
-
-  if (result.livro) {
-    result.livro.titulo = req.body.titulo;
-    res.json(livros);
-  } else {
-    livroNaoEncontrado(res);
-  }
-});
-
 app.delete("/livros/:id", (req, res) => {
   const { id } = req.params;
   const result = buscaLivro(id);
