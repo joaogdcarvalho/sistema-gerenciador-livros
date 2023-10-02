@@ -7,3 +7,7 @@ dotenv.config();
 mongoose.connect(
   `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.43cpu8d.mongodb.net/rv-node`
 );
+
+let db = mongoose.connection;
+
+export default db;
