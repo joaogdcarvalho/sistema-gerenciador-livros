@@ -16,14 +16,6 @@ app.use(express.json());
 routes(app);
 
 // Rotas
-app.get("/livros/:id", (req, res) => {
-  const result = buscaLivro(req.params.id);
-  if (result.livro) {
-    res.json(result.livro);
-  } else {
-    livroNaoEncontrado(res);
-  }
-});
 
 app.delete("/livros/:id", (req, res) => {
   const { id } = req.params;
