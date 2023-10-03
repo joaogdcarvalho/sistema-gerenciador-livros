@@ -2,30 +2,40 @@ import livros from "../models/Livro.js";
 
 class LivroController {
   static listarLivros = (req, res) => {
-    livros.find()
-    .populate('autor')
-    .exec((err, livros) => {
-      res
+    livros
+      .find()
+      .populate('autor')
+      .exec((err, livros) => {
+        res
         .status(200)
         .json(livros);
-    });
+      });
   };
 
   static listarLivroPorId = (req, res) => {
     const id = req.params.id;
 
-    livros.findById(id)
+    livros
+      .findById(id)
       .populate('autor', 'nome')
       .exec((err, livros) => {
-        if(err){
+        if (err) {
           res
             .status(400)
-            .send({message: `${err.message} - Id '${id}' não localizado.`})
+            .send({ message: `${err.message} - Id '${id}' não localizado.` });
         } else {
           res
             .status(200)
-            .json(livros)
-      };
+            .json(livros);
+        }
+      });
+  };
+
+  static listarLivroPorEditora = (req, res) => {
+    const editora = req.query.editora;
+
+    livros.find({ editora: editora }, {}, (err, livros) => {
+      res.status(200).send(livros);
     });
   };
 
@@ -65,17 +75,17 @@ class LivroController {
     const id = req.params.id;
 
     livros.findByIdAndDelete(id, (err) => {
-      if(!err){
+      if (!err) {
         res
           .status(200)
-          .send({ message: `Livro removido com sucesso`});
+          .send({ message: `Livro removido com sucesso` });
       } else {
         res
           .status(500)
           .send({ message: err.message });
       }
-    })
-  }
+    });
+  };
 }
 
 export default LivroController
