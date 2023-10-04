@@ -5,10 +5,11 @@ class LivroController {
     livros
       .find()
       .populate('autor')
+      .populate('editora')
       .exec((err, livros) => {
         res
-        .status(200)
-        .json(livros);
+          .status(200)
+          .json(livros);
       });
   };
 
@@ -18,11 +19,13 @@ class LivroController {
     livros
       .findById(id)
       .populate('autor', 'nome')
+      .populate('editora', 'nome')
       .exec((err, livros) => {
         if (err) {
           res
             .status(400)
-            .send({ message: `${err.message} - Id '${id}' não localizado.` });
+            .send({message: `${err.message} - Id do livro '${id}' não localizado.`,
+          });
         } else {
           res
             .status(200)
@@ -31,12 +34,24 @@ class LivroController {
       });
   };
 
-  static listarLivroPorEditora = (req, res) => {
-    const editora = req.query.editora;
+  static listarLivroPorEditoraId = (req, res) => {
+    const editoraId = req.query.editora; // Assume que você está passando o ID da editora como parâmetro de consulta
 
-    livros.find({ editora: editora }, {}, (err, livros) => {
-      res.status(200).send(livros);
-    });
+    livros
+      .find({ editora: editoraId })
+      .populate('autor', 'nome')
+      .populate('editora', 'nome')
+      .exec((err, livros) => {
+        if (err) {
+          res
+            .status(400)
+            .send({message: `${err.message} - Não foi possível listar livros da editora '${editoraId}'.`,});
+        } else {
+          res
+            .status(200)
+            .json(livros);
+        }
+      });
   };
 
   static cadastrarLivro = (req, res) => {
